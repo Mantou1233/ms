@@ -1,4 +1,4 @@
-import ms, { Converts, parse } from "../src";
+import ms, { Converts } from "../src";
 
 describe("ms(string)", () => {
     it("should not throw an error", () => {
@@ -48,11 +48,8 @@ describe("ms(string)", () => {
     });
 
     it("should return NaN if invalid", () => {
-        // @ts-expect-error - We expect this to fail.
         expect(isNaN(ms("☃"))).toBe(true);
-        // @ts-expect-error - We expect this to fail.
         expect(isNaN(ms("10-.5"))).toBe(true);
-        // @ts-expect-error - We expect this to fail.
         expect(isNaN(ms("ms"))).toBe(true);
     });
 
@@ -87,7 +84,7 @@ describe("ms(string with multiple ms)", () => {
 
     it("should handle ints", () => {
         expect(
-            parse("2m1s", {
+            ms("2m1s", {
                 compound: true
             })
         ).toBe(Converts.m * 2 + Converts.s);
@@ -95,7 +92,7 @@ describe("ms(string with multiple ms)", () => {
 
     it("should handle floats", () => {
         expect(
-            parse("54.2m14.2s", {
+            ms("54.2m14.2s", {
                 compound: true
             })
         ).toBe(Converts.m * 54.2 + Converts.s * 14.2);
@@ -103,7 +100,7 @@ describe("ms(string with multiple ms)", () => {
 
     it("should handle all", () => {
         expect(
-            parse("1s 5m 8h 9d 3w 4y", {
+            ms("1s 5m 8h 9d 3w 4y", {
                 compound: true
             })
         ).toBe(
@@ -118,10 +115,40 @@ describe("ms(string with multiple ms)", () => {
 
     it("should throw error on duplicate when unique", () => {
         expect(
-            isNaN(parse("1s 2s", {
+            isNaN(ms("1s 2s", {
                 compound: true,
                 unique: true
             }))
         ).toBe(true);
+    });
+});
+
+describe("ms(number)", () => {
+    it("should not throw an error", () => {
+        expect(() => {
+            ms(114514);
+        }).not.toThrowError();
+    });
+
+    it("should handle ms", () => {
+        expect(
+            ms(ms("15ms"))
+        ).toBe("15ms");
+    });
+
+    it("should handle seconds", () => {
+        expect(
+            ms(ms("53s"))
+        ).toBe("53.0s");
+    });
+
+    it("should handle all", () => {
+        expect(
+            ms(
+                ms("1s 5m 8h 9d 4y", {
+                    compound: true
+                })
+            )
+        ).toBe("4y 9d 8h 5m 1s");
     });
 });
