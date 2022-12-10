@@ -19,6 +19,7 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src/**/*.{ts,js,json,yaml,yml}",
+    "fmt": "yarn format",
     "prepublishOnly": "rollup-type-bundler -e stream",
     "test": "jest"
   },

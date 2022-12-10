@@ -1,0 +1,127 @@
+import ms, { Converts, parse } from "../src";
+
+describe("ms(string)", () => {
+    it("should not throw an error", () => {
+        expect(() => {
+            ms("1m");
+        }).not.toThrowError();
+    });
+
+    it("should preserve ms", () => {
+        expect(ms("100")).toBe(100);
+    });
+
+    it("should convert from m to ms", () => {
+        expect(ms("1m")).toBe(60000);
+    });
+
+    it("should convert from h to ms", () => {
+        expect(ms("1h")).toBe(3600000);
+    });
+
+    it("should convert d to ms", () => {
+        expect(ms("2d")).toBe(172800000);
+    });
+
+    it("should convert w to ms", () => {
+        expect(ms("3w")).toBe(1814400000);
+    });
+
+    it("should convert s to ms", () => {
+        expect(ms("1s")).toBe(1000);
+    });
+
+    it("should convert ms to ms", () => {
+        expect(ms("100ms")).toBe(100);
+    });
+
+    it("should convert y to ms", () => {
+        expect(ms("1y")).toBe(31557600000);
+    });
+
+    it("should work with decimals", () => {
+        expect(ms("1.5h")).toBe(5400000);
+    });
+
+    it("should work with multiple spaces", () => {
+        expect(ms("1   s")).toBe(1000);
+    });
+
+    it("should return NaN if invalid", () => {
+        // @ts-expect-error - We expect this to fail.
+        expect(isNaN(ms("☃"))).toBe(true);
+        // @ts-expect-error - We expect this to fail.
+        expect(isNaN(ms("10-.5"))).toBe(true);
+        // @ts-expect-error - We expect this to fail.
+        expect(isNaN(ms("ms"))).toBe(true);
+    });
+
+    it("should be case-insensitive", () => {
+        expect(ms("1.5H")).toBe(5400000);
+    });
+
+    it("should work with numbers starting with .", () => {
+        expect(ms(".5ms")).toBe(0.5);
+    });
+
+    it("should work with negative integers", () => {
+        expect(ms("-100ms")).toBe(-100);
+    });
+
+    it("should work with negative decimals", () => {
+        expect(ms("-1.5h")).toBe(-5400000);
+        expect(ms("-10.5h")).toBe(-37800000);
+    });
+
+    it('should work with negative decimals starting with "."', () => {
+        expect(ms("-.5h")).toBe(-1800000);
+    });
+});
+
+describe("ms(string with multiple ms)", () => {
+    it("should not throw an error", () => {
+        expect(() => {
+            ms("1m3s");
+        }).not.toThrowError();
+    });
+
+    it("should handle ints", () => {
+        expect(
+            parse("2m1s", {
+                compound: true
+            })
+        ).toBe(Converts.m * 2 + Converts.s);
+    });
+
+    it("should handle floats", () => {
+        expect(
+            parse("54.2m14.2s", {
+                compound: true
+            })
+        ).toBe(Converts.m * 54.2 + Converts.s * 14.2);
+    });
+
+    it("should handle all", () => {
+        expect(
+            parse("1s 5m 8h 9d 3w 4y", {
+                compound: true
+            })
+        ).toBe(
+            Converts.y * 4 +
+            Converts.w * 3 +
+            Converts.d * 9 +
+            Converts.h * 8 +
+            Converts.m * 5 +
+            Converts.s * 1
+        );
+    });
+
+    it("should throw error on duplicate when unique", () => {
+        expect(
+            isNaN(parse("1s 2s", {
+                compound: true,
+                unique: true
+            }))
+        ).toBe(true);
+    });
+});
