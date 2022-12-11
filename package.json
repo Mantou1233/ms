@@ -1,7 +1,7 @@
 {
-  "name": "@devsnowflake/typescript-template",
+  "name": "@hikariware/ms",
   "version": "1.0.0",
-  "description": "Template for TypeScript projects",
+  "description": "light millisecond conversion utility",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -23,21 +23,6 @@
     "prepublishOnly": "rollup-type-bundler -e stream",
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DevSnowflake/typescript-template.git"
-  },
-  "keywords": [
-    "typescript-template",
-    "template",
-    "project"
-  ],
-  "author": "Snowflake Studio ❄️",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/DevSnowflake/typescript-template/issues"
-  },
-  "homepage": "https://github.com/DevSnowflake/typescript-template#readme",
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
@@ -55,5 +40,18 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mantou1233/ms.git"
+  },
+  "keywords": [
+    "ms"
+  ],
+  "author": "Mantou1233",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mantou1233/ms/issues"
+  },
+  "homepage": "https://github.com/Mantou1233/ms#readme"
 }

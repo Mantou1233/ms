@@ -145,10 +145,10 @@ describe("ms(number)", () => {
     it("should handle all", () => {
         expect(
             ms(
-                ms("1s 5m 8h 9d 4y", {
+                ms("1s 5m 8h", {
                     compound: true
                 })
             )
-        ).toBe("4y 9d 8h 5m 1s");
+        ).toBe("8h 5m 1.0s");
     });
 });

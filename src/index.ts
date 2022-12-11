@@ -130,7 +130,6 @@ function parseMs(ms: number) {
     }
 
     return {
-        y: Math.trunc(Math.trunc(ms / d) / 365),
         d: Math.trunc(ms / d),
         h: Math.trunc(ms / h) % 24,
         m: Math.trunc(ms / m) % 60,
@@ -178,8 +177,8 @@ function format(ms: number, {
 
         result.push(`${prefix}${valstr}${suffix}`);
     };
-    add(parsed.y, "year", "y");
-    add(parsed.d, "day", "d");
+    add(Math.trunc(parsed.d / 365), "year", "y");
+    add(parsed.d % 365, "day", "d");
     add(parsed.h, "hour", "h");
     add(parsed.m, "minute", "m");
 
