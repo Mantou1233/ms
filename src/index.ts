@@ -19,7 +19,7 @@ interface Options {
     unique: boolean;
 
     /**
-     * displays as colons: `5h 1m 45s` → `5:01:45`
+     * displays as colons: `5h 1m 45s 24ms` → `5:01:45.24`
      */
     colonify: boolean;
 
@@ -51,8 +51,17 @@ interface Options {
      * @default 0
      */
     msDigits: number;
-}
 
+    /**
+     * fill up zeros: `10:2:1` → `10:02:01`
+     *
+     * default to true when `colonify`.
+     */
+    fillZero: boolean;
+
+    omit: showKeys[];
+}
+export type showKeys = "ms" | "s" | "m" | "h" | "d" | "y";
 export const Converts = { s, m, h, d, w, y } as const;
 type Converts = typeof Converts;
 export const ConvertMap = {
@@ -145,12 +154,15 @@ function format(ms: number, {
     secondsDigits = 1,
     msDigits = 0,
     colonify = false,
-    units = Infinity
+    units = Infinity,
+    fillZero = false,
+    omit = []
 }: Partial<Options> = {}) {
     const parsed = parseMs(ms);
 
     if(colonify && (compact || verbose)) throw new Error("colonify cannot include compact or verbose or it will broke");
     
+    if(colonify) fillZero = true;
     if(colonify || verbose) secondsDigits = 0;
 
     const pluralize = (word: string, count: number) => (count === 1 ? word : `${word}s`);
@@ -159,13 +171,14 @@ function format(ms: number, {
 
     let emptyified = false;
     const add = (value: number, long: string, short: string, valstr?: string) => {
+        if(omit.includes(short as showKeys)) return;
         valstr = (valstr || value || 0).toString();
-        if ((!colonify && valstr === "0") || (colonify && short === "m")) return;
+        if ((!colonify && value === 0) || (colonify && short === "m")) return;
         let prefix, suffix;
         if (colonify) {
-            if (valstr === "0" && !emptyified) return;
+            if (value === 0 && !emptyified) return;
             else emptyified = true;
-            prefix = result.length > 0 ? ":" : "";
+            prefix = result.length > 0 ? short === "ms" ? "." : ":" : "";
             suffix = "";
             const wholeDigits = valstr.includes(".") ? valstr.split(".")[0].length : valstr.length;
             const minLength = result.length > 0 ? 2 : 1;

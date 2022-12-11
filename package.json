@@ -13,6 +13,7 @@
     "dist"
   ],
   "scripts": {
+    "prepare": "husky install",
     "build": "rimraf dist && tsc && npm run build:esm",
     "build:check": "tsc --noEmit --incremental false",
     "build:esm": "gen-esm-wrapper ./dist/index.js ./dist/index.mjs",
@@ -53,5 +54,8 @@
   "bugs": {
     "url": "https://github.com/Mantou1233/ms/issues"
   },
-  "homepage": "https://github.com/Mantou1233/ms#readme"
+  "homepage": "https://github.com/Mantou1233/ms#readme",
+  "dependencies": {
+    "pretty-ms": "^8.0.0"
+  }
 }
